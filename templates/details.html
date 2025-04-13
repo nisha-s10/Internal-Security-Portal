@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'js/styles.js' %}"></script>
+</head>
+<body id="index">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">
+        <img src="{% static 'images/logo.jpeg' %}" alt="Logo" class="site-logo">
+        Security Agency
+    </a>
+</nav>
+
+<!-- Main Content -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <h1>Anurag</h1>
+            <p>Below are the employee details:</p>
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>Employee ID</th>
+                        <td>{{ employee.employee_id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Name</th>
+                        <td>{{ employee.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>{{ employee.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Date of Birth</th>
+                        <td>{{ employee.dob }}</td>
+                    </tr>
+                    <tr>
+                        <th>Aadhar Number</th>
+                        <td>{{ employee.masked_aadhar_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Mobile Number</th>
+                        <td>{{ employee.mobile_number }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Profile Photo Section -->
+        <div class="col-md-4">
+            <div class="card" style="width: 18rem;">
+                <img src="{{ employee.photo.url }}" class="card-img-top" alt="Profile Photo" style="max-width: 100%; height: auto;">
+                <div class="card-body">
+                    <h5 class="card-title">Profile Photo</h5>
+                </div>
+            </div>
+        </div>
+        
+
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="text-center mt-5 mb-3">
+    <p>&copy; 2025 Security Agency. All rights reserved.</p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

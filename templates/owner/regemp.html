@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+{% load static %}
+{% if m %}
+<div class="custom-alert" id="custom-alert">
+<span class="alert-text">{{ m }}</span>
+<button class="close-btn" onclick="dismissAlert()">×</button>
+</div>
+{% endif %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Form Validation | Security Agency</title>
+    
+    <!-- Static CSS & JS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <script src="{% static 'js/styles.js' %}"></script>
+
+    <!-- Bootstrap CSS (Required for navbar) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
+    
+    <!-- Optional custom logo styling -->
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Open Sans', sans-serif;
+      }
+      body {
+        padding: 0;
+        margin: 0;
+      }
+      
+      .centered-form {
+        width: 100%;
+        max-width: 500px;
+      }
+
+      .form-wrapper {
+        background: #1BB295;
+        padding: 40px 10px;
+        min-height: calc(100vh - 56px); /* adjusts based on navbar */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      
+
+      form {
+        padding: 25px;
+        background: #fff;
+        max-width: 500px;
+        width: 100%;
+        border-radius: 7px;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+      }
+      form h2 {
+        font-size: 27px;
+        text-align: center;
+        margin: 0px 0 30px;
+      }
+      form .form-group {
+        margin-bottom: 15px;
+        position: relative;
+      }
+      form .form-group.password {
+        position: relative;
+      }
+      form label {
+        display: block;
+        font-size: 15px;
+        margin-bottom: 7px;
+      }
+      form input,
+      form select {
+        height: 45px;
+        padding: 10px;
+        width: 100%;
+        font-size: 15px;
+        outline: none;
+        background: #fff;
+        border-radius: 3px;
+        border: 1px solid #bfbfbf;
+      }
+      form input:focus,
+      form select:focus {
+        border-color: #9a9a9a;
+      }
+      form input.error,
+      form select.error {
+        border-color: #f91919;
+        background: #f9f0f1;
+      }
+      form small {
+        font-size: 14px;
+        margin-top: 5px;
+        display: block;
+        color: #f91919;
+      }
+      form .password i {
+        position: absolute;
+        right: 0px;
+        height: 45px;
+        top: 28px;
+        font-size: 13px;
+        line-height: 45px;
+        width: 45px;
+        cursor: pointer;
+        color: #939393;
+        text-align: center;
+      }
+      .submit-btn {
+        margin-top: 30px;
+      }
+      .submit-btn input {
+        color: white;
+        border: none;
+        height: auto;
+        font-size: 16px;
+        padding: 13px 0;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 500;
+        text-align: center;
+        background: #1BB295;
+        transition: 0.2s ease;
+      }
+      .submit-btn input:hover {
+        background: #179b81;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- ✅ Navbar (from your index page) -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/">
+        <img src="{% static 'images/logo.jpeg' %}" alt="Logo" class="site-logo">
+        Security Agency
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav">
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'index' %}">Index</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'empdetails' %}">Employees</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link active custom-active-link" href="{% url 'regemp' %}">Register</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+              </li>
+          </ul>
+      </div>
+    </nav>
+
+    <!-- ✅ Form starts -->
+    <div class="form-wrapper">
+    <div class="centered-form">
+    <form action="{% url 'regemp' %}" method="POST" id="regemp" enctype="multipart/form-data">
+      {% csrf_token %}
+      <h2>Form Validation</h2>
+      <div class="form-group fullname">
+        <label for="fullname">Full Name</label>
+        <input type="text" id="fullname" placeholder="Enter your full name" name="e_name">
+      </div>
+      <div class="form-group email">
+        <label for="email">Email Address</label>
+        <input type="text" id="email" placeholder="Enter your email address" name="e_email">
+      </div>
+      <div class="form-group password">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password" name="e_pass">
+        <i id="pass-toggle-btn" class="fa-solid fa-eye"></i>
+      </div>
+      
+      <div class="form-group password">
+        <label for="confirm-password">Confirm Password</label>
+        <input type="password" id="confirm-password" placeholder="Re-enter your password" name="e_cpass">
+        <i id="confirm-pass-toggle-btn" class="fa-solid fa-eye"></i>
+      </div>
+      <div class="form-group date">
+        <label for="date">Birth Date</label>
+        <input type="date" id="date" placeholder="Select your date" name="e_dob">
+      </div>
+    
+      <!-- ✅ Mobile Number -->
+      <div class="form-group mobile">
+        <label for="mobile">Mobile Number</label>
+        <input type="tel" id="mobile" placeholder="Enter your mobile number" maxlength="10" pattern="[0-9]{10}" name="e_mob">
+      </div>
+    
+      <!-- ✅ Aadhar Number -->
+      <div class="form-group aadhar">
+        <label for="aadhar">Aadhar Number</label>
+        <input type="text" id="aadhar" placeholder="Enter your 12-digit Aadhar number" maxlength="12" pattern="[0-9]{12}" name="e_adh">
+      </div>
+      <div class="form-group photo">
+        <label for="photo">Upload Photo</label>
+        <input type="file" id="photo" name="e_photo" accept="image/*">
+      </div>
+      {% comment %} <div class="form-group gender">
+        <label for="gender">Gender</label>
+        <select id="gender">
+          <option value="" selected disabled>Select your gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div> {% endcomment %}
+      <div class="form-group submit-btn">
+        <input type="submit" value="Submit">
+      </div>
+    </form>
+    </div>
+  </div>
+  <!-- Footer -->
+<footer class="text-center mt-5 mb-3">
+  <p>&copy; 2025 Security Agency. All rights reserved.</p>
+</footer>
+
+    <!-- Bootstrap JS (for navbar toggle) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  </body>
+</html>

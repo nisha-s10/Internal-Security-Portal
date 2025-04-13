@@ -1,0 +1,103 @@
+{% load static %}
+{% if m %}
+<div class="custom-alert" id="custom-alert">
+<span class="alert-text">{{ m }}</span>
+<button class="close-btn" onclick="dismissAlert()">×</button>
+</div>
+{% endif %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'js/styles.js' %}"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<!-- Navbar (Copied from index page) -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">
+        <img src="{% static 'images/logo.jpeg' %}" alt="Logo" class="site-logo">
+        Security Agency
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'index' %}">Index</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active custom-active-link" href="{% url 'empdetails' %}">Employees</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'regemp' %}">Register</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container mt-5">
+    <h2 class="text-center mb-4">All Employees</h2>
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>DOB</th>
+                <th>Details</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emp in employees %}
+            <tr>
+                <td>{{ emp.employee_id }}</td>
+                <td>{{ emp.name }}</td>
+                <td>{{ emp.email }}</td>
+                <td>{{ emp.mobile_number }}</td>
+                <td>{{ emp.dob }}</td>
+                <td>
+                    <a href="{% url 'viewemp' emp.employee_id %}" class="btn btn-info btn-sm">View</a>
+                  </td>
+                  <td>
+                    <form action="{% url 'deleteemp' emp.employee_id %}" method="POST" style="display:inline;">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm delete-btn" title="Delete Employee">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </form>
+                  </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center">No employees found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Footer -->
+<footer class="text-center mt-5 mb-3">
+    <p>&copy; 2025 Security Agency. All rights reserved.</p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

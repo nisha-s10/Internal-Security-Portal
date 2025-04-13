@@ -1,0 +1,104 @@
+{% load static %}
+{% if m %}
+<div class="custom-alert" id="custom-alert">
+<span class="alert-text">{{ m }}</span>
+<button class="close-btn" onclick="dismissAlert()">×</button>
+</div>
+{% endif %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security Agency Internal Portal</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<script src="{% static 'js/styles.js' %}"></script>
+</head>
+<body id="index">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<a class="navbar-brand" href="/">
+<img src="{% static 'images/logo.jpeg' %}" alt="Logo" class="site-logo">
+Security Agency
+</a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+<span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+<ul class="navbar-nav">
+<li class="nav-item">
+<a class="nav-link" href="/login">Login</a>
+</li>
+</ul>
+</div>
+</nav>
+
+<!-- Main Content -->
+<div class="container mt-5 text-center">
+<h1>Welcome to the Security Agency Internal Portal</h1>
+<p>Please log in to access your dashboard.</p>
+</div>
+
+<!-- Quick Access -->
+<div class="container mt-5">
+  <h3 class="text-center">Quick Access</h3>
+  <div class="row mt-4 justify-content-center">
+    <div class="col-md-3">
+      <a href="/login" class="btn btn-outline-primary btn-block">Login to Dashboard</a>
+    </div>
+    <div class="col-md-3">
+      <a href="/help" class="btn btn-outline-secondary btn-block">Portal Help</a>
+    </div>
+  </div>
+</div>
+
+<!-- Notice -->
+<div class="container mt-5">
+  <div class="alert alert-info text-center">
+    <strong>Notice:</strong> Monthly training session on 15th April at HQ.
+  </div>
+</div>
+
+<!-- Glance Metrics -->
+<div class="container mt-5 text-center">
+  <h4>Our Agency at a Glance</h4>
+  <div class="row mt-4">
+    <div class="col">
+      <h2>150+</h2>
+      <p>Active Guards</p>
+    </div>
+    <div class="col">
+      <h2>25</h2>
+      <p>Active Sites</p>
+    </div>
+    <div class="col">
+      <h2>10+</h2>
+      <p>Years Experience</p>
+    </div>
+  </div>
+</div>
+
+<!-- Login Benefits -->
+<div class="container mt-5">
+  <h5 class="text-center">Why Log In?</h5>
+  <ul class="list-group list-group-flush mt-3">
+    <li class="list-group-item">✔ View Duty Schedule</li>
+    <li class="list-group-item">✔ Mark Attendance</li>
+    <li class="list-group-item">✔ Submit Feedback or Reports</li>
+    <li class="list-group-item">✔ Receive Internal Announcements</li>
+  </ul>
+</div>
+
+<!-- Footer -->
+<footer class="text-center mt-5 mb-3">
+<p>&copy; 2025 Security Agency. All rights reserved.</p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
