@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-sx6ete)=nhi(m!73l#m%7@=i#-&=j+_#3*c7-&p98@776nd_%h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://internalakhandbharatcommando.com','internalakhandbharatcommando.com','o112uce7.up.railway.app', 'https://o112uce7.up.railway.app', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://internalakhandbharatcommando.com','https://o112uce7.up.railway.app']
 
 
 # Application definition
