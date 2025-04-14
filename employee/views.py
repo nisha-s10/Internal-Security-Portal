@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from employee.models import *
-import datetime
+from datetime import datetime, timedelta
 from django.views.decorators.cache import cache_control
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
@@ -19,11 +19,12 @@ def index(request):
         if 'login_time' not in request.session:
             request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
+        naive_login_time = datetime.strptime(request.session['login_time'], "%Y-%m-%d %H:%M:%S")
         # Convert session login time to datetime object
-        login_time = datetime.datetime.strptime(request.session['login_time'], "%Y-%m-%d %H:%M:%S")
+        login_time = timezone.make_aware(naive_login_time, timezone.get_current_timezone())
 
         # Check if the session has expired
-        if current_time - login_time < datetime.timedelta(minutes=ALLOTTED_TIME):
+        if current_time - login_time < timedelta(minutes=ALLOTTED_TIME):
             request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")  # Update login time
             e_id = request.session['employee_id']
             employee = Employee.objects.get(employee_id=e_id)

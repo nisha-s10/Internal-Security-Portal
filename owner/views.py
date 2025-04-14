@@ -6,7 +6,7 @@ from employee.models import *
 from django.views.decorators.cache import cache_control
 from django.urls import reverse
 from django.db.models import Prefetch
-
+from django.utils import timezone
 
 # Define session timeout duration (in minutes)
 ALLOTTED_TIME = 2
@@ -14,14 +14,15 @@ ALLOTTED_TIME = 2
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def index(request):
     if 'owner_id' in request.session:
-        current_time = datetime.now()
+        current_time = timezone.localtime(timezone.now())
 
         # Ensure 'login_time' is set in session
         if 'login_time' not in request.session:
             request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
+        naive_login_time = datetime.strptime(request.session['login_time'], "%Y-%m-%d %H:%M:%S")
         # Convert session login time to datetime object
-        login_time = datetime.strptime(request.session['login_time'], "%Y-%m-%d %H:%M:%S")
+        login_time = timezone.make_aware(naive_login_time, timezone.get_current_timezone())
 
         # Check if the session has expired
         if current_time - login_time < timedelta(minutes=ALLOTTED_TIME):
@@ -42,10 +43,12 @@ def index(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def empdetails(request):
     if 'owner_id' in request.session:
-        current_time = datetime.now()
+        current_time = timezone.localtime(timezone.now())
         if 'login_time' not in request.session:
             request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")
-        login_time = datetime.strptime(request.session['login_time'], "%Y-%m-%d %H:%M:%S")
+        naive_login_time = datetime.strptime(request.session['login_time'], "%Y-%m-%d %H:%M:%S")
+        # Convert session login time to datetime object
+        login_time = timezone.make_aware(naive_login_time, timezone.get_current_timezone())
         
         if current_time - login_time < timedelta(minutes=ALLOTTED_TIME):
             request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")
@@ -62,10 +65,12 @@ def empdetails(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def regemp(request):
     if 'owner_id' in request.session:
-        current_time = datetime.now()
+        current_time = timezone.localtime(timezone.now())
         if 'login_time' not in request.session:
             request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")
-        login_time = datetime.strptime(request.session['login_time'], "%Y-%m-%d %H:%M:%S")
+        naive_login_time = datetime.strptime(request.session['login_time'], "%Y-%m-%d %H:%M:%S")
+        # Convert session login time to datetime object
+        login_time = timezone.make_aware(naive_login_time, timezone.get_current_timezone())
         
         if current_time - login_time < timedelta(minutes=ALLOTTED_TIME):
             request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")
