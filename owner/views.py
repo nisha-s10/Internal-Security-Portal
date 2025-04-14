@@ -1,10 +1,12 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from owner.models import *
 from employee.models import *
 from django.views.decorators.cache import cache_control
 from django.urls import reverse
+from django.db.models import Prefetch
+
 
 # Define session timeout duration (in minutes)
 ALLOTTED_TIME = 2
@@ -130,3 +132,37 @@ def logout(request):
     request.session.flush()  # Clear session data
     request.session['m'] = 'Logged out successfully.'
     return redirect('/')
+
+def attendance_report(request):
+    selected_date = request.GET.get('date')
+    attendances = []
+
+    if selected_date:
+        try:
+            parsed_date = datetime.strptime(selected_date, "%B %d, %Y").date()
+            attendances = Attendance.objects.select_related('employee').filter(date=parsed_date).order_by('employee__name')
+
+            for att in attendances:
+                if att.entry_time and att.exit_time:
+                    entry_dt = datetime.combine(att.date, att.entry_time)
+                    exit_dt = datetime.combine(att.date, att.exit_time)
+                    duration = exit_dt - entry_dt
+                    total_seconds = int(duration.total_seconds())
+                    hours, remainder = divmod(total_seconds, 3600)
+                    minutes, seconds = divmod(remainder, 60)
+                    att.working_time = f"{hours} hr {minutes} min {seconds} sec"
+                else:
+                    att.working_time = None
+
+        except ValueError:
+            selected_date = None
+
+    all_dates = Attendance.objects.values_list('date', flat=True).distinct().order_by('-date')
+    formatted_dates = [d.strftime("%B %d, %Y") for d in all_dates]
+
+    context = {
+        'attendances': attendances,
+        'dates': formatted_dates,
+        'selected_date': selected_date,
+    }
+    return render(request, 'owner/attrepo.html', context)
