@@ -45,30 +45,45 @@ def logout(request):
     return redirect('/')
 
 
+
+
 def mark_attendance(request, employee_id):
-    print(f"[DEBUG] Attendance triggered for: {employee_id}")
     employee = get_object_or_404(Employee, employee_id=employee_id)
-    
-    # Get today's date
-    today = datetime.datetime.now().date()
-    
-    # Check if attendance already exists for today
-    attendance, created = Attendance.objects.get_or_create(employee=employee, date=today)
 
-    now = datetime.datetime.now().time()
+    if request.method == 'POST':
+        password = request.POST.get('password')
 
-    if created:
-        # Mark entry time for new attendance record
-        attendance.entry_time = now
-        attendance.save()
-        return JsonResponse({'message': f"Entry time logged for {employee.name} at {now.strftime('%H:%M:%S')}."})
-    
-    elif attendance.exit_time is None:
-        # Mark exit time if entry time exists but no exit time yet
-        attendance.exit_time = now
-        attendance.save()
-        return JsonResponse({'message': f"Exit time logged for {employee.name} at {now.strftime('%H:%M:%S')}."})
-    
-    else:
-        # Reject further scans for the day
-        return JsonResponse({'message': "Attendance already marked for today (Entry and Exit)."})
+        if password == employee.password:  # Replace with hashed password check if needed
+            today = datetime.datetime.now().date()
+            now = datetime.datetime.now().time()
+
+            attendance, created = Attendance.objects.get_or_create(employee=employee, date=today)
+
+            if created:
+                attendance.entry_time = now
+                attendance.save()
+                return render(request, 'employee/attpass.html', {
+                    'employee': employee,
+                    'success': f"Entry time logged for {employee.name} at {now.strftime('%H:%M:%S')}."
+                })
+
+            elif attendance.exit_time is None:
+                attendance.exit_time = now
+                attendance.save()
+                return render(request, 'employee/attpass.html', {
+                    'employee': employee,
+                    'success': f"Exit time logged for {employee.name} at {now.strftime('%H:%M:%S')}."
+                })
+
+            else:
+                return render(request, 'employee/attpass.html', {
+                    'employee': employee,
+                    'error': "Attendance already marked for today (Entry and Exit)."
+                })
+        else:
+            return render(request, 'employee/attpass.html', {
+                'employee': employee,
+                'error': "Incorrect password."
+            })
+
+    return render(request, 'employee/attpass.html', {'employee': employee})
