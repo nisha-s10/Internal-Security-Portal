@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from employee.models import *
 from owner.models import *
 import datetime
-
+from django.utils import timezone
 
 def index(request):
     m = request.session.pop('m', None)
@@ -25,7 +25,7 @@ def emplog(request):
             request.session['employee_email'] = user.email
 
             # Store full timestamp for accurate session timeout
-            current_time = datetime.datetime.now()
+            current_time = timezone.localtime(timezone.now())
             request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
             return redirect('./employee/')  # Redirect to employee dashboard
@@ -47,7 +47,7 @@ def ownerlog(request):
             request.session['owner_email'] = user.email
 
             # Store full timestamp for accurate session timeout
-            current_time = datetime.datetime.now()
+            current_time = timezone.localtime(timezone.now())
             request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
             return redirect('./owner/')  # Redirect to Admin dashboard

@@ -5,6 +5,7 @@ import datetime
 from django.views.decorators.cache import cache_control
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
+from django.utils import timezone
 
 # Define session timeout duration (in minutes)
 ALLOTTED_TIME = 2
@@ -12,7 +13,7 @@ ALLOTTED_TIME = 2
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def index(request):
     if 'employee_id' in request.session:
-        current_time = datetime.datetime.now()
+        current_time = timezone.localtime(timezone.now())
 
         # Ensure 'login_time' is set in session
         if 'login_time' not in request.session:
@@ -54,8 +55,8 @@ def mark_attendance(request, employee_id):
         password = request.POST.get('password')
 
         if password == employee.password:  # Replace with hashed password check if needed
-            today = datetime.datetime.now().date()
-            now = datetime.datetime.now().time()
+            today = timezone.localtime(timezone.now()).date()
+            now = timezone.localtime(timezone.now()).time()
 
             attendance, created = Attendance.objects.get_or_create(employee=employee, date=today)
 
