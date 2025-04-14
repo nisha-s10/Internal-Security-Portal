@@ -35,7 +35,7 @@ class Employee(models.Model):
                 counter += 1
 
         # Generate a URL that redirects to the employee's details page
-        qr_data = f"https://yourdomain.com/details/{self.employee_id}/"
+        qr_data = f"https://internalakhandbharatcommando.com/details/{self.employee_id}/"
 
         # Generate QR Code
         qr = qrcode.QRCode(

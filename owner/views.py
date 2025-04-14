@@ -7,7 +7,7 @@ from django.views.decorators.cache import cache_control
 from django.urls import reverse
 
 # Define session timeout duration (in minutes)
-ALLOTTED_TIME = 0.5
+ALLOTTED_TIME = 2
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def index(request):
