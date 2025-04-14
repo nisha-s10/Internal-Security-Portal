@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-import datetime
+from datetime import datetime, timedelta
 from owner.models import *
 from employee.models import *
 from django.views.decorators.cache import cache_control
@@ -12,17 +12,17 @@ ALLOTTED_TIME = 2
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def index(request):
     if 'owner_id' in request.session:
-        current_time = datetime.datetime.now()
+        current_time = datetime.now()
 
         # Ensure 'login_time' is set in session
         if 'login_time' not in request.session:
             request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
         # Convert session login time to datetime object
-        login_time = datetime.datetime.strptime(request.session['login_time'], "%Y-%m-%d %H:%M:%S")
+        login_time = datetime.strptime(request.session['login_time'], "%Y-%m-%d %H:%M:%S")
 
         # Check if the session has expired
-        if current_time - login_time < datetime.timedelta(minutes=ALLOTTED_TIME):
+        if current_time - login_time < timedelta(minutes=ALLOTTED_TIME):
             request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")  # Update login time
             o_id = request.session['owner_id']
             owner = Owner.objects.get(owner_id=o_id)
@@ -40,12 +40,12 @@ def index(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def empdetails(request):
     if 'owner_id' in request.session:
-        current_time = datetime.datetime.now()
+        current_time = datetime.now()
         if 'login_time' not in request.session:
             request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")
-        login_time = datetime.datetime.strptime(request.session['login_time'], "%Y-%m-%d %H:%M:%S")
+        login_time = datetime.strptime(request.session['login_time'], "%Y-%m-%d %H:%M:%S")
         
-        if current_time - login_time < datetime.timedelta(minutes=ALLOTTED_TIME):
+        if current_time - login_time < timedelta(minutes=ALLOTTED_TIME):
             request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")
             employees = Employee.objects.all()
             m = request.GET.get('m')  # 👈 fetch message
@@ -60,12 +60,12 @@ def empdetails(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def regemp(request):
     if 'owner_id' in request.session:
-        current_time = datetime.datetime.now()
+        current_time = datetime.now()
         if 'login_time' not in request.session:
             request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")
-        login_time = datetime.datetime.strptime(request.session['login_time'], "%Y-%m-%d %H:%M:%S")
+        login_time = datetime.strptime(request.session['login_time'], "%Y-%m-%d %H:%M:%S")
         
-        if current_time - login_time < datetime.timedelta(minutes=ALLOTTED_TIME):
+        if current_time - login_time < timedelta(minutes=ALLOTTED_TIME):
             request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")
             if request.method=="POST":
                 name = request.POST.get('e_name', '').strip()

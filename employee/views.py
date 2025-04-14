@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from employee.models import *
 import datetime
 from django.views.decorators.cache import cache_control
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 
 # Define session timeout duration (in minutes)
 ALLOTTED_TIME = 2
@@ -41,3 +43,32 @@ def logout(request):
     request.session.flush()  # Clear session data
     request.session['m'] = 'Logged out successfully.'
     return redirect('/')
+
+
+def mark_attendance(request, employee_id):
+    print(f"[DEBUG] Attendance triggered for: {employee_id}")
+    employee = get_object_or_404(Employee, employee_id=employee_id)
+    
+    # Get today's date
+    today = datetime.datetime.now().date()
+    
+    # Check if attendance already exists for today
+    attendance, created = Attendance.objects.get_or_create(employee=employee, date=today)
+
+    now = datetime.datetime.now().time()
+
+    if created:
+        # Mark entry time for new attendance record
+        attendance.entry_time = now
+        attendance.save()
+        return JsonResponse({'message': f"Entry time logged for {employee.name} at {now.strftime('%H:%M:%S')}."})
+    
+    elif attendance.exit_time is None:
+        # Mark exit time if entry time exists but no exit time yet
+        attendance.exit_time = now
+        attendance.save()
+        return JsonResponse({'message': f"Exit time logged for {employee.name} at {now.strftime('%H:%M:%S')}."})
+    
+    else:
+        # Reject further scans for the day
+        return JsonResponse({'message': "Attendance already marked for today (Entry and Exit)."})

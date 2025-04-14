@@ -108,13 +108,15 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# settings.py
 
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'en-us'  # Keep English as the default language
+TIME_ZONE = 'Asia/Kolkata'  # Set timezone to IST
 
-USE_I18N = True
+USE_I18N = True  # Enable internationalization
+USE_L10N = True  # Enable localization
+USE_TZ = True  # Enable timezone support
 
-USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)

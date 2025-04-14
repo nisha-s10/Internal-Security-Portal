@@ -6,6 +6,8 @@ import hashlib
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 import os
+from datetime import datetime
+from django.urls import reverse
 class Employee(models.Model):
     employee_id = models.CharField(max_length=10, primary_key=True, blank=True)  # Use employee ID as primary key
     email = models.EmailField(unique=True)
@@ -34,15 +36,10 @@ class Employee(models.Model):
                     break
                 counter += 1
 
-        # Generate a URL that redirects to the employee's details page
-        qr_data = f"https://internalakhandbharatcommando.com/details/{self.employee_id}/"
+        qr_data = f"https://internalakhandbharatcommando.com{reverse('employee:employee-attendance', kwargs={'employee_id': self.employee_id})}"
 
         # Generate QR Code
-        qr = qrcode.QRCode(
-            version=1,
-            box_size=10,
-            border=4,
-        )
+        qr = qrcode.QRCode(version=1, box_size=10, border=4)
         qr.add_data(qr_data)
         qr.make(fit=True)
 
@@ -54,7 +51,7 @@ class Employee(models.Model):
         img.save(buffer, format="PNG")
         buffer.seek(0)
 
-        # Save image to the ImageField
+        # Save binary data to qr_code_data field
         self.qr_code_data = buffer.read()
 
         super().save(*args, **kwargs)
@@ -69,3 +66,12 @@ def delete_employee_photo(sender, instance, **kwargs):
     if instance.photo and instance.photo.path:
         if os.path.isfile(instance.photo.path):
             os.remove(instance.photo.path)
+
+class Attendance(models.Model):
+    employee = models.ForeignKey('Employee', on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)  # Automatically set to today's date
+    entry_time = models.TimeField(blank=True, null=True)
+    exit_time = models.TimeField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.employee.name} - {self.date}"
