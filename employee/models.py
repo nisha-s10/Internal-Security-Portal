@@ -8,6 +8,7 @@ from django.dispatch import receiver
 import os
 from datetime import datetime
 from django.urls import reverse
+from PIL import Image
 class Employee(models.Model):
     employee_id = models.CharField(max_length=10, primary_key=True, blank=True)  # Use employee ID as primary key
     email = models.EmailField(unique=True)
@@ -39,12 +40,38 @@ class Employee(models.Model):
         qr_data = f"https://internalakhandbharatcommando.com{reverse('employee:employee-attendance', kwargs={'employee_id': self.employee_id})}"
 
         # Generate QR Code
-        qr = qrcode.QRCode(version=1, box_size=10, border=4)
+        qr = qrcode.QRCode(
+        version=1,
+        box_size=10,
+        border=4,
+        error_correction=qrcode.constants.ERROR_CORRECT_H  # High error correction for logo tolerance
+    )
         qr.add_data(qr_data)
         qr.make(fit=True)
 
         # Create an image from the QR Code instance
-        img = qr.make_image(fill_color="black", back_color="white")
+        img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
+
+        # === Add logo in the center ===
+        logo_path = 'static/images/logo.jpeg'  # Adjust path if needed
+        try:
+            logo = Image.open(logo_path)
+            # Resize logo
+            qr_width, qr_height = img.size
+            logo_size = int(qr_width * 0.25)  # 25% of the QR code
+            logo = logo.resize((logo_size, logo_size), Image.LANCZOS)
+
+            # Calculate position to paste
+            pos = ((qr_width - logo_size) // 2, (qr_height - logo_size) // 2)
+
+            # Paste logo (with transparency mask if available)
+            if logo.mode in ("RGBA", "LA"):
+                img.paste(logo, pos, mask=logo)
+            else:
+                img.paste(logo, pos)
+        except FileNotFoundError:
+            # If logo is not found, just use the plain QR
+            pass
 
         # Save image to a BytesIO buffer
         buffer = BytesIO()
