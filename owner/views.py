@@ -76,6 +76,7 @@ def regemp(request):
             request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")
             if request.method=="POST":
                 name = request.POST.get('e_name', '').strip()
+                designation = request.POST.get('e_desig')
                 email = request.POST.get('e_email', '').strip()
                 password = request.POST.get('e_pass', '')
                 confirm_password = request.POST.get('e_cpass', '')
@@ -84,7 +85,7 @@ def regemp(request):
                 aadhar = request.POST.get('e_adh', '').strip()
                 photo = request.FILES.get('e_photo')
 
-                if not all([name, email, password, confirm_password, dob, mobile, aadhar, photo]):
+                if not all([name, designation, email, password, confirm_password, dob, mobile, aadhar, photo]):
                     param = {'m': 'All fields are required.'}
                     return render(request, 'owner/regemp.html', param)
                 
@@ -92,6 +93,7 @@ def regemp(request):
                     email=email,
                     password=password,  # In production, hash this!
                     name=name,
+                    designation=designation,
                     dob=dob,
                     aadhar_number=aadhar,
                     mobile_number=mobile,

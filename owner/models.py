@@ -6,6 +6,7 @@ class Owner(models.Model):
     password = models.CharField(max_length=128)  # Store hashed passwords
     # Add other relevant fields
     name = models.CharField(max_length=100)  # Example field for owner name
+    designation = models.CharField(max_length=100, blank=True, null=True)
     dob = models.DateField(null=True)
     aadhar_number = models.CharField(max_length=12, unique=True, blank=True, null=True)  # New field for Aadhar number
     mobile_number = models.CharField(max_length=10, blank=True, null=True)  # New field for mobile number
