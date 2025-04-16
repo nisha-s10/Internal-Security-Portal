@@ -1,61 +1,35 @@
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from employee.models import *
 from datetime import datetime, timedelta
 from django.views.decorators.cache import cache_control
-from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
 from django.utils import timezone
+from utils.decorators import employee_session_required  # ✅ Import the decorator
 
-# Define session timeout duration (in minutes)
-ALLOTTED_TIME = 2
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@employee_session_required
 def index(request):
-    if 'employee_id' in request.session:
-        current_time = timezone.localtime(timezone.now())
+    e_id = request.session['employee_id']
+    employee = Employee.objects.get(employee_id=e_id)
+    context = {'employee': employee}
+    return render(request, 'employee/index.html', context)
 
-        # Ensure 'login_time' is set in session
-        if 'login_time' not in request.session:
-            request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")
-
-        naive_login_time = datetime.strptime(request.session['login_time'], "%Y-%m-%d %H:%M:%S")
-        # Convert session login time to datetime object
-        login_time = timezone.make_aware(naive_login_time, timezone.get_current_timezone())
-
-        # Check if the session has expired
-        if current_time - login_time < timedelta(minutes=ALLOTTED_TIME):
-            request.session['login_time'] = current_time.strftime("%Y-%m-%d %H:%M:%S")  # Update login time
-            e_id = request.session['employee_id']
-            employee = Employee.objects.get(employee_id=e_id)
-            # Pass the employee details to the template
-
-            context = {'employee': employee}
-            return render(request, 'employee/index.html', context)
-        else:
-            request.session.flush()  # Clear session if timeout occurs
-            param = {'m': 'Session timed out. Please log in again.'}
-            return render(request, 'login.html', param)
-    else:
-        param = {'m': 'Please log in first.'}
-        return render(request, 'login.html', param)
-    
 
 def logout(request):
-    request.session.flush()  # Clear session data
+    request.session.flush()
     request.session['m'] = 'Logged out successfully.'
     return redirect('/')
 
 
-
-
+@employee_session_required
 def mark_attendance(request, employee_id):
     employee = get_object_or_404(Employee, employee_id=employee_id)
 
     if request.method == 'POST':
         password = request.POST.get('password')
 
-        if password == employee.password:  # Replace with hashed password check if needed
+        if password == employee.password:
             today = timezone.localtime(timezone.now()).date()
             now = timezone.localtime(timezone.now()).time()
 
