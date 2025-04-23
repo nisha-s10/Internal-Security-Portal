@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
 from owner.models import Owner
 from employee.models import Employee, Attendance
@@ -59,6 +59,27 @@ def viewemp(request, id):
         return render(request, 'owner/viewemp.html', {'employee': emp})
     except Employee.DoesNotExist:
         return redirect('empdetails')
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@owner_session_required
+def editemp(request, id):
+    employee = get_object_or_404(Employee, pk=id)
+
+    if request.method == "POST":
+        employee.name = request.POST.get('e_name', '').strip()
+        employee.designation = request.POST.get('e_desig', '').strip()
+        employee.email = request.POST.get('e_email', '').strip()
+        employee.mobile_number = request.POST.get('e_mob', '').strip()
+        employee.dob = request.POST.get('e_dob', '')
+        employee.aadhar_number = request.POST.get('e_adh', '').strip()
+
+        if request.FILES.get('e_photo'):
+            employee.photo = request.FILES['e_photo']
+
+        employee.save()
+        return redirect(f"{reverse('empdetails')}?m=Employee updated successfully.")
+
+    return render(request, 'owner/editemp.html', {'employee': employee})   
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @owner_session_required
