@@ -6,6 +6,7 @@ from django.views.decorators.cache import cache_control
 from django.urls import reverse
 from django.utils import timezone
 from utils.decorators import owner_session_required  # ✅ Import your decorator
+import os
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @owner_session_required
@@ -73,9 +74,13 @@ def editemp(request, id):
         employee.dob = request.POST.get('e_dob', '')
         employee.aadhar_number = request.POST.get('e_adh', '').strip()
 
-        if request.FILES.get('e_photo'):
-            employee.photo = request.FILES['e_photo']
-
+        new_photo = request.FILES.get('e_photo')
+        if new_photo:
+            # Delete old photo if exists
+            if employee.photo and os.path.isfile(employee.photo.path):
+                os.remove(employee.photo.path)
+            employee.photo = new_photo
+        
         employee.save()
         return redirect(f"{reverse('empdetails')}?m=Employee updated successfully.")
 
