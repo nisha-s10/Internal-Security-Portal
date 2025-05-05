@@ -113,6 +113,25 @@
             const alert = document.querySelector('.alert-success');
             if (alert) alert.style.display = 'none';
         }, 3000);
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const latInput = document.getElementById("location_lat");
+                const lonInput = document.getElementById("location_lon");
+            
+                if (latInput && lonInput && navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function (position) {
+                            latInput.value = position.coords.latitude.toFixed(6);
+                            lonInput.value = position.coords.longitude.toFixed(6);
+                        },
+                        function (error) {
+                            alert("Please allow location access to mark your attendance.");
+                        }
+                    );
+                }
+            });
+            
+            
     </script>
 
 </body>
