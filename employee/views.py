@@ -22,7 +22,6 @@ def logout(request):
     return redirect('/')
 
 
-@employee_session_required
 def mark_attendance(request, employee_id):
     employee = get_object_or_404(Employee, employee_id=employee_id)
 
