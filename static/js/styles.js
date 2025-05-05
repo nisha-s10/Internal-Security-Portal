@@ -37,6 +37,7 @@ function dismissAlert() {
   }
 }
 
+//register employee
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("regemp");
   const passwordInput = document.getElementById("password");
@@ -49,6 +50,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const dateInput = document.getElementById("date");
   const mobileInput = document.getElementById("mobile");
   const aadharInput = document.getElementById("aadhar");
+  const latInput = document.getElementById("location_lat");
+  const lonInput = document.getElementById("location_lon");
 
   // --- Password toggle
   if (passToggleBtn && passwordInput) {
@@ -109,6 +112,19 @@ document.addEventListener("DOMContentLoaded", function () {
   confirmPasswordInput.addEventListener("input", checkPasswordMatch);
   passwordInput.addEventListener("input", checkPasswordMatch);
 
+  // --- Get current location for latitude and longitude
+  if (latInput && lonInput && navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+        function (position) {
+            latInput.value = position.coords.latitude.toFixed(6);
+            lonInput.value = position.coords.longitude.toFixed(6);
+        },
+        function (error) {
+            alert("Please allow location access to complete registration.");
+        }
+    );
+}
+
   // --- Form validation on submit
   const handleFormData = (e) => {
     e.preventDefault();
@@ -122,6 +138,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const mobile = mobileInput.value.trim();
     const aadhar = aadharInput.value.trim();
     const photoInput = document.getElementById("photo");
+    const lat = latInput.value.trim();
+    const lon = lonInput.value.trim();
 
     const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
     let hasError = false;
@@ -178,6 +196,12 @@ document.addEventListener("DOMContentLoaded", function () {
       hasError = true;
     }
 
+    if (lat === "" || lon === "") {
+      showError(latInput, "Location could not be determined. Please allow location access.");
+      hasError = true;
+    }
+
+
     if (!hasError) {
       form.submit();
     }
@@ -187,3 +211,21 @@ document.addEventListener("DOMContentLoaded", function () {
     form.addEventListener("submit", handleFormData);
   }
 });
+
+// //mark_attendance_location
+// document.addEventListener("DOMContentLoaded", function () {
+//   const latInput = document.getElementById("location_lat");
+//   const lonInput = document.getElementById("location_lon");
+
+//   if (latInput && lonInput && navigator.geolocation) {
+//       navigator.geolocation.getCurrentPosition(
+//           function (position) {
+//               latInput.value = position.coords.latitude;
+//               lonInput.value = position.coords.longitude;
+//           },
+//           function (error) {
+//               alert("Please allow location access to complete registration.");
+//           }
+//       );
+//   }
+// });

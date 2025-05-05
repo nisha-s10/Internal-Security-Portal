@@ -1,10 +1,11 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from employee.models import *
 from datetime import datetime, timedelta
 from django.views.decorators.cache import cache_control
 from django.utils import timezone
 from utils.decorators import employee_session_required  # ✅ Import the decorator
+from geopy.distance import geodesic
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -27,6 +28,29 @@ def mark_attendance(request, employee_id):
 
     if request.method == 'POST':
         password = request.POST.get('password')
+        lat = request.POST.get('latitude')
+        lon = request.POST.get('longitude')
+
+        # Validate location input
+        if not lat or not lon:
+            return render(request, 'employee/attpass.html', {
+                'employee': employee,
+                'error': "Location is required to mark attendance. Please allow location access."
+            })
+        
+        try:
+            current_location = (float(lat), float(lon))
+            registered_location = (employee.location_lat, employee.location_lon)
+        except (ValueError, TypeError):
+            return HttpResponseBadRequest("Invalid location data.")
+        
+        # Check distance
+        distance = geodesic(registered_location, current_location).meters
+        if distance > 100:
+            return render(request, 'employee/attpass.html', {
+                'employee': employee,
+                'error': "You are not within 100 meters of your assigned location. Attendance not allowed."
+            })
 
         if password == employee.password:
             today = timezone.localtime(timezone.now()).date()

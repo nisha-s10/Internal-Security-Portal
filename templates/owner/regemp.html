@@ -134,6 +134,7 @@
         background: #179b81;
       }
     </style>
+    
   </head>
 
   <body>
@@ -218,6 +219,8 @@
         <label for="photo">Upload Photo</label>
         <input type="file" id="photo" name="e_photo" accept="image/*">
       </div>
+      <input type="hidden" name="location_lat" id="location_lat">
+      <input type="hidden" name="location_lon" id="location_lon">
       {% comment %} <div class="form-group gender">
         <label for="gender">Gender</label>
         <select id="gender">
