@@ -30,7 +30,7 @@ class Employee(models.Model):
     def save(self, *args, **kwargs):
 
         if not self.employee_id:
-            combined_data = f"{self.name}{self.email}{self.dob}{self.mobile_number}{self.aadhar_number}" # Use first 8 characters of hash
+            combined_data = f"{self.name}{self.designation}{self.email}{self.dob}{self.mobile_number}{self.aadhar_number}" # Use first 8 characters of hash
             counter = 0
             while True:
                 hashed_data = hashlib.sha256(f"{combined_data}{counter}".encode()).hexdigest()
