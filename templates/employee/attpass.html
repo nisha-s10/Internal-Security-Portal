@@ -88,8 +88,8 @@
                 <label for="password" class="form-label"><i class="bi bi-shield-lock-fill"></i> Enter Password</label>
                 <input type="password" name="password" class="form-control" id="password" placeholder="Your password" required>
                 <!--Hidden Input Fields-->
-                <input type="hidden" name="location_lat" id="location_lat">
-                <input type="hidden" name="location_lon" id="location_lon">
+                <input type="hidden" id="latitude" name="latitude">
+                <input type="hidden" id="longitude" name="longitude">
                 <i class="bi bi-eye-slash toggle-password" id="togglePassword"></i>
             </div>
             <button type="submit" class="btn btn-primary w-100">Mark Attendance</button>
@@ -114,22 +114,30 @@
             if (alert) alert.style.display = 'none';
         }, 3000);
 
-            document.addEventListener("DOMContentLoaded", function () {
-                const latInput = document.getElementById("location_lat");
-                const lonInput = document.getElementById("location_lon");
-            
-                if (latInput && lonInput && navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        function (position) {
-                            latInput.value = position.coords.latitude.toFixed(6);
-                            lonInput.value = position.coords.longitude.toFixed(6);
-                        },
-                        function (error) {
-                            alert("Please allow location access to mark your attendance.");
-                        }
-                    );
+        document.addEventListener("DOMContentLoaded", function () {
+            const latInput = document.getElementById("latitude");
+            const lonInput = document.getElementById("longitude");
+            const form = document.querySelector("form");
+        
+            if (latInput && lonInput && navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        latInput.value = position.coords.latitude.toFixed(6);
+                        lonInput.value = position.coords.longitude.toFixed(6);
+                    },
+                    function (error) {
+                        alert("Please allow location access to mark your attendance.");
+                    }
+                );
+            }
+        
+            form.addEventListener("submit", function (e) {
+                if (!latInput.value || !lonInput.value) {
+                    e.preventDefault(); // stop form from submitting
+                    alert("Location not yet available. Please wait a moment before submitting.");
                 }
             });
+        });
             
             
     </script>
