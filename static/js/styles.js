@@ -211,21 +211,3 @@ document.addEventListener("DOMContentLoaded", function () {
     form.addEventListener("submit", handleFormData);
   }
 });
-
-// //mark_attendance_location
-// document.addEventListener("DOMContentLoaded", function () {
-//   const latInput = document.getElementById("location_lat");
-//   const lonInput = document.getElementById("location_lon");
-
-//   if (latInput && lonInput && navigator.geolocation) {
-//       navigator.geolocation.getCurrentPosition(
-//           function (position) {
-//               latInput.value = position.coords.latitude;
-//               lonInput.value = position.coords.longitude;
-//           },
-//           function (error) {
-//               alert("Please allow location access to complete registration.");
-//           }
-//       );
-//   }
-// });

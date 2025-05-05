@@ -46,10 +46,10 @@ def mark_attendance(request, employee_id):
         
         # Check distance
         distance = geodesic(registered_location, current_location).meters
-        if distance > 100:
+        if distance > 500:
             return render(request, 'employee/attpass.html', {
                 'employee': employee,
-                'error': "You are not within 100 meters of your assigned location. Attendance not allowed."
+                'error': "You are not within 500 meters of your assigned location. Attendance not allowed."
             })
 
         if password == employee.password:
