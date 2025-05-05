@@ -35,8 +35,10 @@ def regemp(request):
         mobile = request.POST.get('e_mob', '').strip()
         aadhar = request.POST.get('e_adh', '').strip()
         photo = request.FILES.get('e_photo')
+        lat = request.POST.get('location_lat', '')
+        lon = request.POST.get('location_lon', '')
 
-        if not all([name, designation, email, password, confirm_password, dob, mobile, aadhar, photo]):
+        if not all([name, designation, email, password, confirm_password, dob, mobile, aadhar, photo, lat, lon]):
             return render(request, 'owner/regemp.html', {'m': 'All fields are required.'})
 
         Employee.objects.create(
@@ -47,7 +49,9 @@ def regemp(request):
             dob=dob,
             aadhar_number=aadhar,
             mobile_number=mobile,
-            photo=photo
+            photo=photo,
+            location_lat=float(lat),
+            location_lon=float(lon)
         )
         return redirect(f"{reverse('empdetails')}?m=Thank you for registration.")
     return render(request, 'owner/regemp.html')
