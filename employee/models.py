@@ -9,6 +9,12 @@ import os
 from datetime import datetime
 from django.urls import reverse
 from PIL import Image
+from django.utils.text import slugify
+
+def employee_photo_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"{slugify(instance.name)}.{ext}"
+    return os.path.join('employee_photos', filename)
 class Employee(models.Model):
     employee_id = models.CharField(max_length=10, primary_key=True, blank=True)  # Use employee ID as primary key
     name = models.CharField(max_length=100)  # Example field for employee name
@@ -30,7 +36,7 @@ class Employee(models.Model):
     aadhar_number = models.CharField(max_length=12, unique=True, blank=True, null=True)  # New field for Aadhar number
     mobile_number = models.CharField(max_length=10, blank=True, null=True)  # New field for mobile number
     qr_code_data = models.BinaryField(blank=True, null=True)  # Store QR code as binary data
-    photo = models.ImageField(upload_to='employee_photos/', blank=True, null=True)
+    photo = models.ImageField(upload_to=employee_photo_path, blank=True, null=True, default='employee_photos/default.jpg')
     location_lat = models.FloatField(null=True, blank=True)
     location_lon = models.FloatField(null=True, blank=True)
 

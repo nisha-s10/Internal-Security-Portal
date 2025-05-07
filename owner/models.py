@@ -3,6 +3,12 @@ import hashlib
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 import os
+from django.utils.text import slugify
+
+def owner_photo_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"{slugify(instance.name)}.{ext}"
+    return os.path.join('owner_photos', filename)
 class Owner(models.Model):
     owner_id = models.CharField(max_length=10, primary_key=True, blank=True)  # Use owner ID as primary key
     name = models.CharField(max_length=100)  # Example field for owner name
@@ -24,7 +30,7 @@ class Owner(models.Model):
     dob = models.DateField(null=True)
     aadhar_number = models.CharField(max_length=12, unique=True, blank=True, null=True)  # New field for Aadhar number
     mobile_number = models.CharField(max_length=10, blank=True, null=True)  # New field for mobile number
-    photo = models.ImageField(upload_to='owner_photos/', blank=True, null=True)
+    photo = models.ImageField(upload_to=owner_photo_path, blank=True, null=True, default='owner_photos/default.jpg')
 
     def __str__(self):
         return f"{self.name} ({self.owner_id})"  # Display name and ID in admin

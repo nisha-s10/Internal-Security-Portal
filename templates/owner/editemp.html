@@ -14,57 +14,141 @@
     <!-- Leaflet CSS & JS for map selection -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Leaflet Geocoder -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+    <style>
+        #suggestions {
+            max-height: 150px;
+            overflow-y: auto;
+            width: 100%;
+            z-index: 1001;
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+        }
+        .leaflet-control-container {
+            z-index: 1000; /* lower than suggestions */
+        }
+        
+    </style>
 
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const useCurrent = document.getElementById("use_current");
-        const selectMap = document.getElementById("select_map");
-        const mapDiv = document.getElementById("map");
-        const latInput = document.getElementById("location_lat");
-        const lonInput = document.getElementById("location_lon");
-
-        function getCurrentLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    latInput.value = position.coords.latitude;
-                    lonInput.value = position.coords.longitude;
-                }, function () {
-                    alert("Failed to get current location.");
-                });
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
-        }
-
-        useCurrent.addEventListener("change", () => {
-            mapDiv.style.display = "none";
-            getCurrentLocation();
-        });
-
-        selectMap.addEventListener("change", () => {
-            mapDiv.style.display = "block";
-            const defaultLat = parseFloat(latInput.value) || 20.5937;
-            const defaultLon = parseFloat(lonInput.value) || 78.9629;
-            const map = L.map('map').setView([defaultLat, defaultLon], 5);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
-
+        document.addEventListener("DOMContentLoaded", function () {
+            const useCurrent = document.getElementById("use_current");
+            const selectMap = document.getElementById("select_map");
+            const mapDiv = document.getElementById("map");
+            const latInput = document.getElementById("location_lat");
+            const lonInput = document.getElementById("location_lon");
+            const searchBox = document.getElementById("search-box");
+            const suggestions = document.getElementById("suggestions");
+        
+            let map;
             let marker;
-            map.on('click', function (e) {
-                latInput.value = e.latlng.lat.toFixed(6);
-                lonInput.value = e.latlng.lng.toFixed(6);
-                if (marker) {
-                    map.removeLayer(marker);
+        
+            function getCurrentLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        latInput.value = position.coords.latitude.toFixed(6);
+                        lonInput.value = position.coords.longitude.toFixed(6);
+                    }, function () {
+                        alert("Failed to get current location.");
+                    });
+                } else {
+                    alert("Geolocation is not supported by this browser.");
                 }
-                marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+            }
+        
+            useCurrent.addEventListener("change", () => {
+                mapDiv.style.display = "none";
+                getCurrentLocation();
             });
-        });
+        
+            selectMap.addEventListener("change", () => {
+                mapDiv.style.display = "block";
+        
+                const defaultLat = parseFloat(latInput.value) || 20.5937;
+                const defaultLon = parseFloat(lonInput.value) || 78.9629;
+        
+                map = L.map('map', {
+                    zoomControl: false  // Disable default top-left zoom control
+                }).setView([defaultLat, defaultLon], 5);
+                
+                // Add zoom control at bottom right
+                L.control.zoom({ position: 'bottomright' }).addTo(map);
+                
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+        
+                marker = L.marker([defaultLat, defaultLon], { draggable: true }).addTo(map);
+        
+                marker.on('dragend', function (e) {
+                    const latlng = marker.getLatLng();
+                    latInput.value = latlng.lat.toFixed(6);
+                    lonInput.value = latlng.lng.toFixed(6);
+                });
+        
+                map.on('click', function (e) {
+                    const lat = e.latlng.lat.toFixed(6);
+                    const lon = e.latlng.lng.toFixed(6);
+                    latInput.value = lat;
+                    lonInput.value = lon;
+        
+                    if (marker) {
+                        map.removeLayer(marker);
+                    }
+                    marker = L.marker([lat, lon], { draggable: true }).addTo(map);
+                });
+            });
+        
+            // Search functionality with Nominatim
+            searchBox.addEventListener("input", function () {
+                const query = searchBox.value;
+                if (query.length < 3) {
+                    suggestions.innerHTML = "";
+                    return;
+                }
+        
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        suggestions.innerHTML = "";
+                        data.slice(0, 5).forEach(location => {
+                            const item = document.createElement("li");
+                            item.className = "list-group-item list-group-item-action";
+                            item.textContent = location.display_name;
+                            item.addEventListener("click", () => {
+                                const lat = parseFloat(location.lat);
+                                const lon = parseFloat(location.lon);
+                                latInput.value = lat.toFixed(6);
+                                lonInput.value = lon.toFixed(6);
+                                searchBox.value = location.display_name;
+                                suggestions.innerHTML = "";
+        
+                                if (map) {
+                                    map.setView([lat, lon], 15);
+                                    if (marker) map.removeLayer(marker);
+                                    marker = L.marker([lat, lon], { draggable: true }).addTo(map);
+                                }
+                            });
+                            suggestions.appendChild(item);
+                        });
+                    });
+            });
 
-        if (useCurrent.checked) {
-            getCurrentLocation();
-        }
-    });
+            searchBox.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") {
+                    e.preventDefault(); // Stop form submission
+                }
+            });
+            
+        
+            if (useCurrent.checked) {
+                getCurrentLocation();
+            }
+        });
     </script>
 
 </head>
@@ -147,7 +231,7 @@
                     <label>Photo</label>
                     <input type="file" name="e_photo" class="form-control-file">
                     {% if employee.photo %}
-                        <p>Current: <img src="{{ employee.photo.url }}" height="100"></p>
+                        <p>Current: <img src="{{ employee.photo.url }}" alt="{{ employee.name }}" height="100" onerror="this.onerror=null;this.src='/media/employee_photos/default.jpg';"></p>
                     {% endif %}
                 </div>
                 <div class="form-group">
@@ -165,6 +249,8 @@
                     <input type="hidden" name="location_lon" id="location_lon" value="{{ employee.location_lon }}">
                 
                     <!-- Map Container (hidden by default) -->
+                    <input id="search-box" type="text" class="form-control mb-2" placeholder="Search location (e.g. Mumbai, India)">
+                    <ul id="suggestions" class="list-group mb-2" style="position: absolute; z-index: 1000;"></ul>                    
                     <div id="map" style="height: 300px; margin-top: 10px; display: none;"></div>
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>
