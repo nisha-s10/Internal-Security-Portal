@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const dateInput = document.getElementById("date");
   const mobileInput = document.getElementById("mobile");
   const aadharInput = document.getElementById("aadhar");
+  const genderInputs = document.getElementsByName("e_gender");
   const latInput = document.getElementById("location_lat");
   const lonInput = document.getElementById("location_lon");
 
@@ -148,6 +149,20 @@ document.addEventListener("DOMContentLoaded", function () {
       showError(fullnameInput, "Enter your full name");
       hasError = true;
     }
+    
+    let genderSelected = false;
+    for (let i = 0; i < genderInputs.length; i++) {
+      if (genderInputs[i].checked) {
+        genderSelected = true;
+        break;
+      }
+    }
+    if (!genderSelected) {
+      // Use the closest parent of any gender input to show error
+      showError(genderInputs[0], "Please select your gender");
+      hasError = true;
+    }
+
     if (!emailPattern.test(email)) {
       showError(emailInput, "Enter a valid email address");
       hasError = true;

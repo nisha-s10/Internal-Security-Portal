@@ -11,11 +11,21 @@ from django.urls import reverse
 from PIL import Image
 class Employee(models.Model):
     employee_id = models.CharField(max_length=10, primary_key=True, blank=True)  # Use employee ID as primary key
+    name = models.CharField(max_length=100)  # Example field for employee name
+    GENDER_CHOICES = [
+        ('Male', 'Male'),
+        ('Female', 'Female'),
+        ('Other', 'Other'),
+    ] 
+    gender = models.CharField(
+        max_length=6,
+        choices=GENDER_CHOICES,
+        null=True,  # Optional: allows null values if gender isn't provided
+        blank=True,  # Optional: allows blank values if gender isn't provided
+    )
+    designation = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=128)  # Store hashed passwords
-    # Add other relevant fields
-    name = models.CharField(max_length=100)  # Example field for employee name
-    designation = models.CharField(max_length=100, blank=True, null=True)
     dob = models.DateField()
     aadhar_number = models.CharField(max_length=12, unique=True, blank=True, null=True)  # New field for Aadhar number
     mobile_number = models.CharField(max_length=10, blank=True, null=True)  # New field for mobile number
@@ -30,7 +40,7 @@ class Employee(models.Model):
     def save(self, *args, **kwargs):
 
         if not self.employee_id:
-            combined_data = f"{self.name}{self.designation}{self.email}{self.dob}{self.mobile_number}{self.aadhar_number}" # Use first 8 characters of hash
+            combined_data = f"{self.name}{self.gender}{self.designation}{self.email}{self.dob}{self.mobile_number}{self.aadhar_number}" # Use first 8 characters of hash
             counter = 0
             while True:
                 hashed_data = hashlib.sha256(f"{combined_data}{counter}".encode()).hexdigest()

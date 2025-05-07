@@ -180,6 +180,21 @@
         <label for="fullname">Full Name</label>
         <input type="text" id="fullname" placeholder="Enter your full name" name="e_name">
       </div>
+      <div class="form-group gender">
+        <label>Gender</label>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="e_gender" id="male" value="Male">
+          <label class="form-check-label" for="male">Male</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="e_gender" id="female" value="Female">
+          <label class="form-check-label" for="female">Female</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="e_gender" id="other" value="Other">
+          <label class="form-check-label" for="other">Other</label>
+        </div>
+      </div>      
       <div class="form-group designation">
         <label for="designation">Designation</label>
         <input type="text" id="designation" placeholder="Enter designation" name="e_desig">
@@ -219,17 +234,9 @@
         <label for="photo">Upload Photo</label>
         <input type="file" id="photo" name="e_photo" accept="image/*">
       </div>
+      <!--Hidden Input Fields-->
       <input type="hidden" name="location_lat" id="location_lat">
       <input type="hidden" name="location_lon" id="location_lon">
-      {% comment %} <div class="form-group gender">
-        <label for="gender">Gender</label>
-        <select id="gender">
-          <option value="" selected disabled>Select your gender</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
-        </select>
-      </div> {% endcomment %}
       <div class="form-group submit-btn">
         <input type="submit" value="Submit">
       </div>

@@ -27,6 +27,7 @@ def empdetails(request):
 def regemp(request):
     if request.method == "POST":
         name = request.POST.get('e_name', '').strip()
+        gender = request.POST.get('e_gender')
         designation = request.POST.get('e_desig')
         email = request.POST.get('e_email', '').strip()
         password = request.POST.get('e_pass', '')
@@ -38,14 +39,15 @@ def regemp(request):
         lat = request.POST.get('location_lat', '')
         lon = request.POST.get('location_lon', '')
 
-        if not all([name, designation, email, password, confirm_password, dob, mobile, aadhar, photo, lat, lon]):
+        if not all([name, gender, designation, email, password, confirm_password, dob, mobile, aadhar, photo, lat, lon]):
             return render(request, 'owner/regemp.html', {'m': 'All fields are required.'})
 
         Employee.objects.create(
+            name=name,
+            gender=gender,
+            designation=designation,
             email=email,
             password=password,  # Note: Use password hashing in production!
-            name=name,
-            designation=designation,
             dob=dob,
             aadhar_number=aadhar,
             mobile_number=mobile,
@@ -72,11 +74,12 @@ def editemp(request, id):
 
     if request.method == "POST":
         employee.name = request.POST.get('e_name', '').strip()
+        employee.gender = request.POST.get('e_gender', '').strip()
         employee.designation = request.POST.get('e_desig', '').strip()
         employee.email = request.POST.get('e_email', '').strip()
-        employee.mobile_number = request.POST.get('e_mob', '').strip()
         employee.dob = request.POST.get('e_dob', '')
         employee.aadhar_number = request.POST.get('e_adh', '').strip()
+        employee.mobile_number = request.POST.get('e_mob', '').strip()
 
         new_photo = request.FILES.get('e_photo')
         if new_photo:
@@ -84,6 +87,13 @@ def editemp(request, id):
             if employee.photo and os.path.isfile(employee.photo.path):
                 os.remove(employee.photo.path)
             employee.photo = new_photo
+
+        try:
+            employee.location_lat = float(request.POST.get('location_lat', ''))
+            employee.location_lon = float(request.POST.get('location_lon', ''))
+        except ValueError:
+            employee.location_lat = None
+            employee.location_lon = None
         
         employee.save()
         return redirect(f"{reverse('empdetails')}?m=Employee updated successfully.")
