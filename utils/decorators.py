@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from django.shortcuts import render, redirect
 
-ALLOTTED_TIME = 2  # in minutes
+ALLOTTED_TIME = 2 # in minutes
 
 def owner_session_required(view_func):
     @wraps(view_func)

@@ -17,6 +17,40 @@ def index(request):
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @owner_session_required
+def editown(request):
+    o_id = request.session['owner_id']
+    owner = get_object_or_404(Owner, owner_id=o_id)
+
+    if request.method == "POST":
+        old_password = owner.password
+        owner.name = request.POST.get('o_name', '').strip()
+        owner.gender = request.POST.get('o_gender', '').strip()
+        owner.designation = request.POST.get('o_desig', '').strip()
+        owner.email = request.POST.get('o_email', '').strip()
+        owner.password = request.POST.get('o_pass', '')
+        owner.dob = request.POST.get('o_dob', '')
+        owner.aadhar_number = request.POST.get('o_adh', '').strip()
+        owner.mobile_number = request.POST.get('o_mob', '').strip()
+
+        new_photo = request.FILES.get('o_photo')
+        if new_photo:
+            # Delete old photo if exists
+            if owner.photo and os.path.isfile(owner.photo.path):
+                os.remove(owner.photo.path)
+            owner.photo = new_photo
+
+        owner.save()
+
+        if old_password != owner.password:
+            request.session.flush()  # Log out
+            return render(request, 'login.html', {'m': 'Password updated successfully. Please re-login now.'})
+
+        return redirect(f"{reverse('index')}?m=Owner profile updated successfully.")
+
+    return render(request, 'owner/editown.html', {'owner': owner})
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@owner_session_required
 def empdetails(request):
     employees = Employee.objects.all()
     m = request.GET.get('m')  # 👈 fetch message
