@@ -10,6 +10,7 @@
 
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 <link rel="icon" href="{% static 'images/logo.jpeg' %}">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 <script src="{% static 'js/styles.js' %}"></script>
 
 <body id="login">
@@ -30,7 +31,8 @@
                     </div>
                     <div class="input-group">
                         <i class='bx bxs-lock-alt'></i>
-                        <input type="password" placeholder="Password" name="o_pass">
+                        <input type="password" placeholder="Password" name="o_pass" id="o_password">
+                        <i class='bx bx-show toggle-password' onclick="togglePassword('o_password', this)"></i>
                     </div>
                     <button type="submit">Sign in</button> <!-- Add type="submit" -->
                     <p>
@@ -66,7 +68,8 @@
                         </div>
                         <div class="input-group">
                             <i class='bx bxs-lock-alt'></i>
-                            <input type="password" placeholder="Password" name="e_pass">
+                            <input type="password" placeholder="Password" name="e_pass" id="e_password">
+                            <i class='bx bx-show toggle-password' onclick="togglePassword('e_password', this)"></i>
                         </div>
                         <button type="submit">Sign in</button> <!-- Add type="submit" -->
                         <p>
