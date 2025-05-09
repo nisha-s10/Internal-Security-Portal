@@ -77,6 +77,7 @@ def editemp(request, id):
         employee.gender = request.POST.get('e_gender', '').strip()
         employee.designation = request.POST.get('e_desig', '').strip()
         employee.email = request.POST.get('e_email', '').strip()
+        employee.password = request.POST.get('e_pass', '')
         employee.dob = request.POST.get('e_dob', '')
         employee.aadhar_number = request.POST.get('e_adh', '').strip()
         employee.mobile_number = request.POST.get('e_mob', '').strip()
