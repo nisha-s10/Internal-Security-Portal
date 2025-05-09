@@ -16,6 +16,35 @@ def index(request):
     context = {'employee': employee}
     return render(request, 'employee/index.html', context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@employee_session_required
+def editown(request):
+    e_id = request.session['employee_id']
+    employee = get_object_or_404(Employee, employee_id=e_id)
+
+    if request.method == "POST":
+        old_password = employee.password
+        employee.email = request.POST.get('e_email', '').strip()
+        employee.password = request.POST.get('e_pass', '')
+        employee.dob = request.POST.get('e_dob', '')
+        employee.mobile_number = request.POST.get('e_mob', '').strip()
+
+        new_photo = request.FILES.get('e_photo')
+        if new_photo:
+            # Delete old photo if exists
+            if employee.photo and os.path.isfile(employee.photo.path):
+                os.remove(employee.photo.path)
+            employee.photo = new_photo
+
+        employee.save()
+
+        if old_password != employee.password:
+            request.session.flush()  # Log out
+            return render(request, 'login.html', {'m': 'Password updated successfully. Please re-login now.'})
+
+        return redirect(f"{reverse('employee:index')}?m=Your profile updated successfully.")
+
+    return render(request, 'employee/editown.html', {'employee': employee})
 
 def logout(request):
     request.session.flush()

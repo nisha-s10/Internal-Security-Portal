@@ -45,7 +45,7 @@ def editown(request):
             request.session.flush()  # Log out
             return render(request, 'login.html', {'m': 'Password updated successfully. Please re-login now.'})
 
-        return redirect(f"{reverse('index')}?m=Owner profile updated successfully.")
+        return redirect(f"{reverse('index')}?m=Your profile updated successfully.")
 
     return render(request, 'owner/editown.html', {'owner': owner})
 
