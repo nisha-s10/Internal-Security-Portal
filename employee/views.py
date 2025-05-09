@@ -12,8 +12,9 @@ from geopy.distance import geodesic
 @employee_session_required
 def index(request):
     e_id = request.session['employee_id']
+    m = request.session.pop('m', '')
     employee = Employee.objects.get(employee_id=e_id)
-    context = {'employee': employee}
+    context = {'employee': employee, 'm':m}
     return render(request, 'employee/index.html', context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -42,7 +43,8 @@ def editown(request):
             request.session.flush()  # Log out
             return render(request, 'login.html', {'m': 'Password updated successfully. Please re-login now.'})
 
-        return redirect(f"{reverse('employee:index')}?m=Your profile updated successfully.")
+        request.session['m'] = 'Your profile updated successfully.'
+        return redirect('employee:index')
 
     return render(request, 'employee/editown.html', {'employee': employee})
 

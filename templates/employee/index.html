@@ -2,6 +2,13 @@
 {% load static %}
 {% load base64filters %}
 
+{% if m %}
+<div class="custom-alert" id="custom-alert">
+    <span class="alert-text">{{ m }}</span>
+    <button class="close-btn" onclick="dismissAlert()">×</button>
+</div>
+{% endif %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">

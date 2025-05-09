@@ -12,8 +12,10 @@ import os
 @owner_session_required
 def index(request):
     o_id = request.session['owner_id']
+    m = request.session.pop('m', '')
     owner = Owner.objects.get(owner_id=o_id)
-    return render(request, 'owner/index.html', {'owner': owner})
+    context = {'owner': owner, 'm':m}
+    return render(request, 'owner/index.html', context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @owner_session_required
@@ -45,7 +47,8 @@ def editown(request):
             request.session.flush()  # Log out
             return render(request, 'login.html', {'m': 'Password updated successfully. Please re-login now.'})
 
-        return redirect(f"{reverse('index')}?m=Your profile updated successfully.")
+        request.session['m'] = 'Your profile updated successfully.'
+        return redirect('index')
 
     return render(request, 'owner/editown.html', {'owner': owner})
 
