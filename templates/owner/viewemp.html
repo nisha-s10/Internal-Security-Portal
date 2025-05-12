@@ -91,7 +91,7 @@
         <!-- Profile Photo Section -->
         <div class="col-md-4">
             <div class="card" style="width: 18rem;">
-                <img src="{{ employee.photo.url }}" alt="{{ employee.name }}" class="card-img-top" style="max-width: 100%; height: auto;" onerror="this.onerror=null;this.src='/media/employee_photos/default.jpg';">
+                <img src="{% if employee.photo %}{{ employee.photo.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}" alt="{{ employee.name }}" class="card-img-top" style="max-width: 100%; height: auto;" onerror="this.onerror=null;this.src='/media/employee_photos/default.jpg';">
                 <div class="card-body">
                     <h5 class="card-title">Profile Photo</h5>
                 </div>
