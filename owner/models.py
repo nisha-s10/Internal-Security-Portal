@@ -36,7 +36,7 @@ class Owner(models.Model):
         return f"{self.name} ({self.owner_id})"  # Display name and ID in admin
     
     def save(self, *args, **kwargs):
-        if not self.photo:
+        if not self.pk and not self.photo:
             self.photo = 'owner_photos/default.jpg'
 
         if not self.owner_id:

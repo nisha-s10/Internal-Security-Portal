@@ -44,7 +44,7 @@ class Employee(models.Model):
         return f"{self.name} ({self.employee_id})"  # Display name and ID in admin
 
     def save(self, *args, **kwargs):
-        if not self.photo:
+        if not self.pk and not self.photo:
             self.photo = 'employee_photos/default.jpg'
 
         if not self.employee_id:
