@@ -84,16 +84,22 @@
                 mapDiv.style.display = "none";
                 getCurrentLocation();
             });
+
+            let mapInitialized = false;  // Add a flag to track map initialization
         
             selectMap.addEventListener("change", () => {
                 mapDiv.style.display = "block";
+
+                if (mapInitialized) return;  // Prevent reinitializing
         
                 const defaultLat = parseFloat(latInput.value) || 20.5937;
                 const defaultLon = parseFloat(lonInput.value) || 78.9629;
         
                 map = L.map('map', {
                     zoomControl: false  // Disable default top-left zoom control
-                }).setView([defaultLat, defaultLon], 5);
+                }).setView([defaultLat, defaultLon], 12);
+
+                mapInitialized = true;  // Set the flag to true
                 
                 // Add zoom control at bottom right
                 L.control.zoom({ position: 'bottomright' }).addTo(map);
