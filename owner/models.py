@@ -7,7 +7,8 @@ from django.utils.text import slugify
 
 def owner_photo_path(instance, filename):
     ext = filename.split('.')[-1]
-    filename = f"{slugify(instance.name)}.{ext}"
+    name = instance.name.strip().replace(" ", "_")
+    filename = f"{name}.{ext}"
     return os.path.join('owner_photos', filename)
 class Owner(models.Model):
     owner_id = models.CharField(max_length=10, primary_key=True, blank=True)  # Use owner ID as primary key
