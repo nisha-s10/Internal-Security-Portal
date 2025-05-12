@@ -66,7 +66,8 @@
         
             let map;
             let marker;
-        
+            let mapInitialized = false;  // Add this
+
             function getCurrentLocation() {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function (position) {
@@ -82,10 +83,8 @@
         
             useCurrent.addEventListener("change", () => {
                 mapDiv.style.display = "none";
-                getCurrentLocation();
+                getCurrentLocation();  // Only fetch when selected
             });
-
-            let mapInitialized = false;  // Add a flag to track map initialization
         
             selectMap.addEventListener("change", () => {
                 mapDiv.style.display = "block";
@@ -177,11 +176,6 @@
                     e.preventDefault(); // Stop form submission
                 }
             });
-            
-        
-            if (useCurrent.checked) {
-                getCurrentLocation();
-            }
         });
     </script>
 
