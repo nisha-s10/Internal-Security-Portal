@@ -103,7 +103,7 @@
         </div>
         <div class="col-md-4">
             <div class="card" style="width: 18rem;">
-                <img src="{{ owner.photo.url }}" alt="{{ owner.name }}" class="card-img-top" style="max-width: 100%; height: auto;" onerror="this.onerror=null;this.src='/media/owner_photos/default.jpg';">
+                <img src="{% if owner.photo %}{{ owner.photo.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}" alt="{{ owner.name }}" class="card-img-top" style="max-width: 100%; height: auto;">
                 <div class="card-body">
                     <h5 class="card-title">Profile Photo</h5>
                 </div>

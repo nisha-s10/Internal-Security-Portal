@@ -36,8 +36,8 @@ def editown(request):
 
         new_photo = request.FILES.get('o_photo')
         if new_photo:
-            # Delete old photo only if it's not the default
-            if owner.photo and owner.photo.name != 'owner_photos/default.jpg' and os.path.isfile(owner.photo.path):
+            # Delete old photo if exists
+            if owner.photo and os.path.isfile(owner.photo.path):
                 os.remove(owner.photo.path)
             owner.photo = new_photo
 
@@ -78,9 +78,6 @@ def regemp(request):
 
         if not all([name, gender, designation, email, password, confirm_password, dob, mobile, aadhar, lat, lon]):
             return render(request, 'owner/regemp.html', {'m': 'All fields are required.'})
-        
-        if not photo:
-            photo = 'employee_photos/default.jpg'
 
         Employee.objects.create(
             name=name,
@@ -124,8 +121,8 @@ def editemp(request, id):
 
         new_photo = request.FILES.get('e_photo')
         if new_photo:
-            # Delete old photo only if it's not the default
-            if employee.photo and employee.photo.name != 'employee_photos/default.jpg' and os.path.isfile(employee.photo.path):
+            # Delete old photo if exists
+            if employee.photo and os.path.isfile(employee.photo.path):
                 os.remove(employee.photo.path)
             employee.photo = new_photo
 

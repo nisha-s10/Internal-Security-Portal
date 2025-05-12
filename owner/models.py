@@ -30,7 +30,7 @@ class Owner(models.Model):
     dob = models.DateField(null=True)
     aadhar_number = models.CharField(max_length=12, unique=True, blank=True, null=True)  # New field for Aadhar number
     mobile_number = models.CharField(max_length=10, blank=True, null=True)  # New field for mobile number
-    photo = models.ImageField(upload_to=owner_photo_path, blank=True, null=True, default='owner_photos/default.jpg')
+    photo = models.ImageField(upload_to=owner_photo_path, blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({self.owner_id})"  # Display name and ID in admin

@@ -126,7 +126,9 @@
                     <label>Photo</label>
                     <input type="file" name="o_photo" class="form-control-file">
                     {% if owner.photo %}
-                        <p>Current: <img src="{{ owner.photo.url }}" alt="{{ owner.name }}" height="100" onerror="this.onerror=null;this.src='/media/owner_photos/default.jpg';"></p>
+                        <p>Current: <img src="{{ owner.photo.url }}" alt="{{ owner.name }}" height="100"></p>
+                    {% else %}
+                        <p>Current: <img src="{{% static 'images/default.jpg' %}}" alt="Default Photo" height="100"></p>
                     {% endif %}
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>

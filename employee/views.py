@@ -32,8 +32,8 @@ def editown(request):
 
         new_photo = request.FILES.get('e_photo')
         if new_photo:
-            # Delete old photo only if it's not the default
-            if employee.photo and employee.photo.name != 'employee_photos/default.jpg' and os.path.isfile(employee.photo.path):
+            # Delete old photo if exists
+            if employee.photo and os.path.isfile(employee.photo.path):
                 os.remove(employee.photo.path)
             employee.photo = new_photo
 

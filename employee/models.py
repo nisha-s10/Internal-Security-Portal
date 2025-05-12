@@ -36,7 +36,7 @@ class Employee(models.Model):
     aadhar_number = models.CharField(max_length=12, unique=True, blank=True, null=True)  # New field for Aadhar number
     mobile_number = models.CharField(max_length=10, blank=True, null=True)  # New field for mobile number
     qr_code_data = models.BinaryField(blank=True, null=True)  # Store QR code as binary data
-    photo = models.ImageField(upload_to=employee_photo_path, blank=True, null=True, default='employee_photos/default.jpg')
+    photo = models.ImageField(upload_to=employee_photo_path, blank=True, null=True)
     location_lat = models.FloatField(null=True, blank=True)
     location_lon = models.FloatField(null=True, blank=True)
 
