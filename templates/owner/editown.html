@@ -128,7 +128,7 @@
                     {% if owner.photo %}
                         <p>Current: <img src="{{ owner.photo.url }}" alt="{{ owner.name }}" height="100"></p>
                     {% else %}
-                        <p>Current: <img src="{{% static 'images/default.jpg' %}}" alt="Default Photo" height="100"></p>
+                        <p>Current: <img src="{% static 'images/default.jpg' %}" alt="Default Photo" height="100"></p>
                     {% endif %}
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>

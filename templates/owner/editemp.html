@@ -258,7 +258,7 @@
                     {% if employee.photo %}
                         <p>Current: <img src="{{ employee.photo.url }}" alt="{{ employee.name }}" height="100"></p>
                     {% else %}
-                        <p>Current: <img src="{{% static 'images/default.jpg' %}}" alt="Default Photo" height="100"></p>
+                        <p>Current: <img src="{% static 'images/default.jpg' %}" alt="Default Photo" height="100"></p>
                     {% endif %}
                 </div>
                 <div class="form-group">
