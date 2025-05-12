@@ -78,6 +78,9 @@ def regemp(request):
 
         if not all([name, gender, designation, email, password, confirm_password, dob, mobile, aadhar, lat, lon]):
             return render(request, 'owner/regemp.html', {'m': 'All fields are required.'})
+        
+        if not photo:
+            photo = None
 
         Employee.objects.create(
             name=name,
