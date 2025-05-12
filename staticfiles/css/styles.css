@@ -209,24 +209,43 @@ footer {
     .input-group i {
         position: absolute;
         top: 50%;
-        left: 1rem;
         transform: translateY(-50%);
         font-size: 1.4rem;
         color: var(--gray-2);
+        pointer-events: none;
     }
 
     .input-group input {
         width: 100%;
-        padding: 1rem 3rem;
+        padding: 1rem 3rem 1rem 3rem; /* Enough space on both sides */
         font-size: 1rem;
         background-color: var(--gray);
         border-radius: .5rem;
         border: 0.125rem solid var(--white);
         outline: none;
+        z-index: 1;
+        position: relative;
     }
+    
 
     .input-group input:focus {
         border: 0.125rem solid var(--primary-color);
+    }
+
+    .input-group .toggle-password {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.4rem;
+        color: var(--gray-2);
+        cursor: pointer;
+        pointer-events: auto;
+        z-index: 2;
+    }
+    
+    .input-group .bxs-lock-alt {
+        left: 1rem;
     }
 
     .form button {
