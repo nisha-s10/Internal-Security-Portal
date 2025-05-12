@@ -76,8 +76,11 @@ def regemp(request):
         lat = request.POST.get('location_lat', '')
         lon = request.POST.get('location_lon', '')
 
-        if not all([name, gender, designation, email, password, confirm_password, dob, mobile, aadhar, photo, lat, lon]):
+        if not all([name, gender, designation, email, password, confirm_password, dob, mobile, aadhar, lat, lon]):
             return render(request, 'owner/regemp.html', {'m': 'All fields are required.'})
+        
+        if not photo:
+            photo = 'employee_photos/default.jpg'
 
         Employee.objects.create(
             name=name,

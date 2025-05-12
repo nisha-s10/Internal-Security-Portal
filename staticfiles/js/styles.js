@@ -173,10 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
         showError(photoInput, "File size should be less than 2MB");
         hasError = true;
       }
-    } else {
-      showError(photoInput, "Please upload a photo");
-      hasError = true;
-    }
+    } 
 
     if (!hasError) {
       form.submit();
