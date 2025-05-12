@@ -44,6 +44,8 @@ class Employee(models.Model):
         return f"{self.name} ({self.employee_id})"  # Display name and ID in admin
 
     def save(self, *args, **kwargs):
+        if not self.photo:
+            self.photo = 'employee_photos/default.jpg'
 
         if not self.employee_id:
             combined_data = f"{self.name}{self.gender}{self.designation}{self.email}{self.dob}{self.mobile_number}{self.aadhar_number}" # Use first 8 characters of hash
