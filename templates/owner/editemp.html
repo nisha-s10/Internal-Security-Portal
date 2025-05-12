@@ -89,45 +89,53 @@
         
             selectMap.addEventListener("change", () => {
                 mapDiv.style.display = "block";
-
-                if (mapInitialized) return;  // Prevent reinitializing
-        
-                const defaultLat = parseFloat(latInput.value) || 20.5937;
-                const defaultLon = parseFloat(lonInput.value) || 78.9629;
-        
+            
+                const savedLat = parseFloat(latInput.value);
+                const savedLon = parseFloat(lonInput.value);
+            
+                // If already initialized, just update the map view and marker
+                if (mapInitialized) {
+                    if (!isNaN(savedLat) && !isNaN(savedLon)) {
+                        map.setView([savedLat, savedLon], 15);
+                        if (marker) map.removeLayer(marker);
+                        marker = L.marker([savedLat, savedLon], { draggable: true }).addTo(map);
+                    }
+                    return;
+                }
+            
+                const defaultLat = !isNaN(savedLat) ? savedLat : 20.5937;
+                const defaultLon = !isNaN(savedLon) ? savedLon : 78.9629;
+            
                 map = L.map('map', {
-                    zoomControl: false  // Disable default top-left zoom control
+                    zoomControl: false
                 }).setView([defaultLat, defaultLon], 12);
-
-                mapInitialized = true;  // Set the flag to true
-                
-                // Add zoom control at bottom right
+            
+                mapInitialized = true;
+            
                 L.control.zoom({ position: 'bottomright' }).addTo(map);
-                
+            
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors'
                 }).addTo(map);
-        
+            
                 marker = L.marker([defaultLat, defaultLon], { draggable: true }).addTo(map);
-        
+            
                 marker.on('dragend', function (e) {
                     const latlng = marker.getLatLng();
                     latInput.value = latlng.lat.toFixed(6);
                     lonInput.value = latlng.lng.toFixed(6);
                 });
-        
+            
                 map.on('click', function (e) {
                     const lat = e.latlng.lat.toFixed(6);
                     const lon = e.latlng.lng.toFixed(6);
                     latInput.value = lat;
                     lonInput.value = lon;
-        
-                    if (marker) {
-                        map.removeLayer(marker);
-                    }
+            
+                    if (marker) map.removeLayer(marker);
                     marker = L.marker([lat, lon], { draggable: true }).addTo(map);
                 });
-            });
+            });            
         
             // Search functionality with Nominatim
             searchBox.addEventListener("input", function () {
