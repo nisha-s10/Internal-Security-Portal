@@ -40,6 +40,9 @@ def editown(request):
             if owner.photo and os.path.isfile(owner.photo.path):
                 os.remove(owner.photo.path)
             owner.photo = new_photo
+        elif not owner.photo:
+            # If no new photo and current photo is empty, assign default manually
+            owner.photo = 'owner_photos/default.jpg'
 
         owner.save()
 
@@ -78,6 +81,10 @@ def regemp(request):
 
         if not all([name, gender, designation, email, password, confirm_password, dob, mobile, aadhar, lat, lon]):
             return render(request, 'owner/regemp.html', {'m': 'All fields are required.'})
+        
+        if not photo:
+            # If no new photo and current photo is empty, assign default manually
+            photo = 'employee_photos/default.jpg'
 
         Employee.objects.create(
             name=name,
@@ -125,6 +132,9 @@ def editemp(request, id):
             if employee.photo and os.path.isfile(employee.photo.path):
                 os.remove(employee.photo.path)
             employee.photo = new_photo
+        elif not employee.photo:
+            # If no new photo and current photo is empty, assign default manually
+            employee.photo = 'employee_photos/default.jpg'
 
         try:
             employee.location_lat = float(request.POST.get('location_lat', ''))
