@@ -102,17 +102,17 @@ def regemp(request):
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @owner_session_required
-def viewemp(request, id):
+def viewemp(request, empid):
     try:
-        emp = Employee.objects.get(pk=id)
+        emp = Employee.objects.get(employee_id=empid)
         return render(request, 'owner/viewemp.html', {'employee': emp})
     except Employee.DoesNotExist:
         return redirect('empdetails')
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @owner_session_required
-def editemp(request, id):
-    employee = get_object_or_404(Employee, pk=id)
+def editemp(request, empid):
+    employee = get_object_or_404(Employee, employee_id=empid)
 
     if request.method == "POST":
         employee.employee_id = request.POST.get('e_id', '').strip()  # OPTIONAL
@@ -146,10 +146,10 @@ def editemp(request, id):
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @owner_session_required
-def deleteemp(request, id):
+def deleteemp(request, empid):
     if request.method == "POST":
         try:
-            Employee.objects.get(pk=id).delete()
+            Employee.objects.get(employee_id=empid).delete()
         except Employee.DoesNotExist:
             pass
     return redirect('empdetails')

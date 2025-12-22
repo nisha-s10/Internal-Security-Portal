@@ -18,7 +18,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="/">
         <img src="{% static 'images/logo.jpeg' %}" alt="Logo" class="site-logo" href="/">
-        Security Agency
+        Akhand Bharat Commando
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,8 +49,15 @@
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-8">
-            <h1>{{ employee.name }}</h1>
-            <p>Below are personal details:</p>
+            
+                <a class="navbar-brand d-flex align-items-center" href="">
+                    <img src="{% static 'images/logo.jpeg' %}" alt="Logo" class="site-logo mr-2">
+                    <h1 class="mb-0 site-title" style="color: black;">Akhand Bharat Commando</h1>
+                </a>
+           
+            <br>
+            <h2>{{ employee.name }}</h2>
+            <br>
             <table class="table table-striped">
                 <tbody>
                     <tr>
@@ -113,34 +120,45 @@
 
 <!-- ================= ID CARD (PRINT ONLY) ================= -->
 <div class="id-card-container print-area">
-  <div class="id-card">
-    <div class="id-card-header">
-      <img src="{% static 'images/logo.jpeg' %}" class="id-logo">
-      <div>
-        <h6>Security Agency</h6>
-        <small>Employee ID Card</small>
-      </div>
-    </div>
+    <div class="id-card">
 
-    <div class="id-card-body">
-      <img src="{% if employee.photo %}{{ employee.photo.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}"
-           class="id-photo">
+        <div class="id-card-header">
+            <img src="{% static 'images/logo.jpeg' %}" class="id-logo">
+            <div>
+                <strong>Akhand Bharat Commando</strong><br>
+                <small>Employee ID Card</small>
+            </div>
+        </div>
 
-      <div class="id-details">
-        <p><strong>{{ employee.name }}</strong></p>
-        <p>ID: {{ employee.employee_id }}</p>
-        <p>{{ employee.designation }}</p>
-        <p>DOB: {{ employee.dob }}</p>
-        <p>Mob: {{ employee.mobile_number }}</p>
-      </div>
-    </div>
+        <div class="id-card-body">
 
-    <div class="id-card-footer">
-      {% if employee.qr_code_data %}
-        <img src="data:image/png;base64,{{ employee.qr_code_data|base64 }}" class="id-qr">
-      {% endif %}
-      <small>Authorized Personnel Only</small>
-    </div>
+            <!-- PHOTO -->
+            <img src="{% if employee.photo %}{{ employee.photo.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}"
+                class="id-photo">
+
+            <!-- DETAILS -->
+            <div class="id-details">
+                <h6><b>{{ employee.name }}</b></h6>
+                <p><strong>Employee ID: </strong> {{ employee.employee_id }}</p>
+                <p><strong>Designation: </strong>{{ employee.designation }}</p>
+                <p><strong>Email ID: </strong>{{ employee.email }}</p>
+                <p><strong>Date of Birth: </strong>{{ employee.dob }}</p>
+                <p><strong>Aadhar Number: </strong>{{ employee.masked_aadhar_number }}</p>
+                <p><strong>Mobile Number: </strong>{{ employee.mobile_number }}</p>
+            </div>
+
+            <!-- QR -->
+            {% if employee.qr_code_data %}
+                <img src="data:image/png;base64,{{ employee.qr_code_data|base64 }}" class="id-qr">
+            {% endif %}
+
+        </div>
+
+
+        <div class="id-card-footer">
+            <small>Authorized Personnel</small>
+        </div>
+
   </div>
 </div>
 
@@ -153,6 +171,5 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 </body>
 </html>

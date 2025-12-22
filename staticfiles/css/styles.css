@@ -559,3 +559,140 @@ footer {
         
     }
 }
+
+/* ======================================================
+   VIEWEMP – ID CARD PRINT (FINAL STABLE VERSION)
+   ====================================================== */
+
+/* Hide ID card on normal screen */
+.id-card-container {
+  display: none !important;
+}
+
+/* ================= ID CARD BASE ================= */
+.id-card {
+  width: 86mm;
+  height: 54mm;
+  padding: 3mm;
+  border: 1px solid #000;
+  border-radius: 5px;
+  background: #fff;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+
+  /* GRID ensures header, body, footer always fit */
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  row-gap: 2mm;
+}
+
+/* ================= HEADER ================= */
+.id-card-header {
+  display: flex;
+  align-items: center;
+  gap: 3mm;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 1.5mm;
+}
+
+.id-logo {
+  width: 10mm;
+  height: 10mm;
+}
+
+/* ================= BODY ================= */
+.id-card-body {
+  display: grid;
+  grid-template-columns: 18mm 1fr 14mm; /* photo | details | qr */
+  column-gap: 2mm;
+  align-items: center;
+}
+
+
+.id-photo {
+  width: 18mm;
+  height: 22mm;
+  border: 1px solid #000;
+  object-fit: cover;
+}
+
+.id-details {
+  font-size: 7pt;
+  line-height: 1.2;
+}
+
+.id-details p {
+  margin: 0;
+  padding: 0;
+  font-size: 7pt;
+  line-height: 1.2;
+  color: #000 !important;
+}
+
+
+/* ================= FOOTER ================= */
+.id-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.id-qr {
+  width: 14mm;
+  height: 14mm;
+}
+.id-card,
+.id-card * {
+  color: #000 !important;
+}
+
+.id-details {
+  font-weight: 500;
+}
+
+.id-card-footer {
+  text-align: right;
+  font-size: 7pt;
+}
+
+/* ================= PRINT MODE ================= */
+@media print {
+
+  @page {
+    size: 86mm 54mm;
+    margin: 0;
+  }
+
+  html, body {
+    width: 86mm;
+    height: 54mm;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* Hide everything */
+  body * {
+    visibility: hidden;
+  }
+
+  /* SHOW ID CARD */
+  .id-card-container {
+    display: block !important;
+    visibility: visible;
+  }
+
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+
+  .print-area {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 86mm;
+    height: 54mm;
+    transform: translate(-50%, -50%);
+  }
+}

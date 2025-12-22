@@ -45,12 +45,15 @@ class Employee(models.Model):
         return f"{self.name} ({self.employee_id})"  # Display name and ID in admin
 
     def save(self, *args, **kwargs):
-        if not self.employee_id:
+        if self.employee_id:
+            if not self.employee_id.isdigit() or len(self.employee_id) != 7:
+                raise ValueError("Employee ID must be 6 digits")
+        else:
             combined_data = f"{self.name}{self.gender}{self.designation}{self.email}{self.dob}{self.mobile_number}{self.aadhar_number}" # Use first 8 characters of hash
             counter = 0
             while True:
                 hashed_data = hashlib.sha256(f"{combined_data}{counter}".encode()).hexdigest()
-                numeric_hash = int(hashed_data, 16) % 900000 + 100000  # Ensure it's between 100000 and 999999
+                numeric_hash = int(hashed_data, 16) % 9000000 + 1000000  # Ensure it's between 1000000 and 9000000
                 if not Employee.objects.filter(employee_id=numeric_hash).exists():
                     self.employee_id = numeric_hash
                     break
