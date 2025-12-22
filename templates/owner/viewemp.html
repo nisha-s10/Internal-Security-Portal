@@ -107,8 +107,7 @@
             </div>
         </div>
         <a href="{% url 'empdetails' %}" class="btn btn-secondary mt-3">Back to list</a>
-        
-
+        <button onclick="window.print()" class="btn btn-primary mt-3">Print ID Card</button>
     </div>
 </div>
 
@@ -116,6 +115,40 @@
 <footer class="text-center mt-5 mb-3">
     <p>&copy; 2025 Security Agency. All rights reserved.</p>
 </footer>
+
+<!-- ================= ID CARD (PRINT ONLY) ================= -->
+<div class="id-card-container print-area">
+  <div class="id-card">
+    <div class="id-card-header">
+      <img src="{% static 'images/logo.jpeg' %}" class="id-logo">
+      <div>
+        <h6>Security Agency</h6>
+        <small>Employee ID Card</small>
+      </div>
+    </div>
+
+    <div class="id-card-body">
+      <img src="{% if employee.photo %}{{ employee.photo.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}"
+           class="id-photo">
+
+      <div class="id-details">
+        <p><strong>{{ employee.name }}</strong></p>
+        <p>ID: {{ employee.employee_id }}</p>
+        <p>{{ employee.designation }}</p>
+        <p>DOB: {{ employee.dob }}</p>
+        <p>Mob: {{ employee.mobile_number }}</p>
+      </div>
+    </div>
+
+    <div class="id-card-footer">
+      {% if employee.qr_code_data %}
+        <img src="data:image/png;base64,{{ employee.qr_code_data|base64 }}" class="id-qr">
+      {% endif %}
+      <small>Authorized Personnel Only</small>
+    </div>
+  </div>
+</div>
+
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
