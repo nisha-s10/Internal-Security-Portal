@@ -63,6 +63,7 @@ def empdetails(request):
 @owner_session_required
 def regemp(request):
     if request.method == "POST":
+        employee_id = request.POST.get('employee_id', '').strip()  # OPTIONAL
         name = request.POST.get('e_name', '').strip()
         gender = request.POST.get('e_gender')
         designation = request.POST.get('e_desig')
@@ -83,6 +84,7 @@ def regemp(request):
             photo = None
 
         Employee.objects.create(
+            employee_id = employee_id,
             name=name,
             gender=gender,
             designation=designation,
@@ -113,6 +115,7 @@ def editemp(request, id):
     employee = get_object_or_404(Employee, pk=id)
 
     if request.method == "POST":
+        employee.employee_id = request.POST.get('e_id', '').strip()  # OPTIONAL
         employee.name = request.POST.get('e_name', '').strip()
         employee.gender = request.POST.get('e_gender', '').strip()
         employee.designation = request.POST.get('e_desig', '').strip()

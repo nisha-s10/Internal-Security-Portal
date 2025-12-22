@@ -221,6 +221,10 @@
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group">
+                    <label>Employee ID</label>
+                    <input type="text" name="e_id" value="{{ employee.employee_id }}" class="form-control" required>
+                </div>
+                <div class="form-group">
                     <label>Name</label>
                     <input type="text" name="e_name" value="{{ employee.name }}" class="form-control" required>
                 </div>
